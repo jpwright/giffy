@@ -35,42 +35,42 @@ Examples
 --------
 
 ### Bare minimum
-To make a gif called `out.gif` from a movie `in.mp4` consisting of the first 3 seconds:
+To make a gif called `out.gif` from a movie `in.mp4` consisting of the first 3 seconds:<br />
 `./giffy -i in.mp4 -o out.gif -s 0 -t 3`
 
 ### Resizing
-To make that gif half the size in each dimension:
+To make that gif half the size in each dimension:<br />
 `./giffy -i in.mp4 -o out.gif -s 0 -t 3 -r 50%`
 
-To force that gif to be 200 pixels wide:
+To force that gif to be 200 pixels wide:<br />
 `./giffy -i in.mp4 -o out.gif -s 0 -t 3 -r 200`
 
 ### Captioning
-To add a caption:
+To add a caption:<br />
 `./giffy -i in.mp4 -o out.gif -s 0 -t 3 -t "Hello world"`
 
-To add a caption with multiple lines:
+To add a caption with multiple lines:<br />
 `./giffy -i in.mp4 -o out.gif -s 0 -t 3 -t "Hello world\nGoodbye world"`
 
-To add a caption with line height 24px:
+To add a caption with line height 24px:<br />
 `./giffy -i in.mp4 -o out.gif -s 0 -t 3 -t "Hello world" -l 24`
 
-To add a caption with line height 10% of the output gif:
+To add a caption with line height 10% of the output gif:<br />
 `./giffy -i in.mp4 -o out.gif -s 0 -t 3 -t "Hello world" -l 10%`
 
 ### Speedup
-To animate at 36 fps:
+To animate at 36 fps:<br />
 `./giffy -i in.mp4 -o out.gif -s 0 -t 3 -f 36`
 
 Note that the default is 24, regardless of the fps of the input movie.
 
 ### Optimization
-To change the gif optimization level:
+To change the gif optimization level:<br />
 `./giffy -i in.mp4 -o out.gif -s 0 -t 3 -z 1`
 
-See the [gifsicle manpage](http://www.lcdf.org/gifsicle/man.html) for an explanation of gif optimization levels.
+See the [gifsicle manpage](http://www.lcdf.org/gifsicle/man.html) for an explanation of gif optimization levels.<br />
 
-To compress to 256 colors:
+To compress to 256 colors:<br />
 `./giffy -i in.mp4 -o out.gif -s 0 -t 3 -c`
 
 
