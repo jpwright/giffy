@@ -1,0 +1,199 @@
+#!/bin/bash
+
+usage()
+{
+cat << EOF
+usage: $0 options
+
+GIFFY! Create animated gifs from video files.
+
+OPTIONS:
+   -h, --help             Show this message
+   -i, --input            Input file. Can be a wide variety of formats, try 'avconv -formats' to see a list.
+   -o, --output           Output file. 
+   -s, --start            Start timestamp. Can be a number of seconds or in hh:mmss[.xxx] form.
+   -d, --duration         Duration. Should be a number of seconds (decimals OK)
+   -r, --resize           Resize operator. Can be a percentage (50%) or a width in pixels (50). Default is 100%.
+   -t, --caption          Caption operator. Should be a string, for example '-caption 'caption words here''. You can insert linebreaks into the caption by inserting '\n'.
+   -l, --caption-height   Line height of caption, either as a percentage or in number of pixels.
+   -f, --fps              Frames per second for the output gif. Default is 24. Max is 48.
+   -z, --optimize         Optimization level. Default (and maximum) is 3.
+   -c, --compress         Enable compression to 256 colors. Will reduce output filesize at the expense of quality.
+   -v, --verbose          Verbose output.
+   
+   
+EOF
+exit 0
+}
+
+INPUT=
+OUTPUT=
+START=
+DURATION=
+RESIZEFLAG=false
+RESIZE=
+CAPTIONFLAG=false
+CAPTION=
+CAPTIONPCTFLAG=false
+CAPTIONHEIGHT=14
+FPS=24
+OPTIMIZE=3
+VERBOSE=false
+COMPRESS=false
+
+params="$(getopt -o hr:c:t:l:f:z:vi:o:s:d: -l help,resize:,compress,caption:,caption-height:,fps:,optimize:,verbose,input:,output:,start:,duration: --name "$0" -- "$@")"
+eval set -- "$params"
+
+while true
+do
+    case "$1" in
+        -h|--help)
+            usage
+            break
+            ;;
+        -i|--input)
+            INPUT=$2
+            shift 2
+            ;;
+        -o|--output)
+            OUTPUT=$2
+            shift 2
+            ;;
+        -s|--start)
+            START=$2
+            shift 2
+            ;;
+        -d|--duration)
+            DURATION=$2
+            shift 2
+            ;;
+        -r|--resize)
+            RESIZEFLAG=true
+	    RESIZE=$2
+            shift 2
+            ;;
+        -t|--caption)
+            CAPTION=$2
+            CAPTIONFLAG=true
+            shift 2
+            ;;
+        -l|--caption-height)
+            CAPTIONRAW=$2
+            CAPTIONLASTCHAR=$(echo $CAPTIONRAW | tail -c 2)
+            if [ "$CAPTIONLASTCHAR" == "%" ]
+            then
+            	CAPTIONPCTFLAG=true
+            	CAPTIONHEIGHTLEN=$(expr length $2)
+            	CAPTIONHEIGHT=${CAPTIONRAW:0:-1}
+            else
+            	CAPTIONPCTFLAG=false
+            	CAPTIONHEIGHT=$2
+            fi
+            shift 2
+            ;;
+        -f|--fps)
+            FPS=$2
+            shift 2
+            ;;
+        -z|--optimize)
+            OPTIMIZE=$2
+            shift 2
+            ;;
+        -v|--verbose)
+            VERBOSE=true
+            shift
+            ;;
+        -c|--compress)
+            COMPRESS=true
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Not implemented: $1" >&2
+            exit 1
+            ;;
+    esac
+done
+
+TDIR="$(mktemp -d)"
+# echo $TDIR
+# trap "{ cd - ; rm -rf $TDIR; exit 255; }" SIGINT
+
+if $VERBOSE
+then
+	echo "GIFFY: Starting..."
+	echo "GIFFY: Created temporary directory at $TDIR"
+fi
+
+if $VERBOSE
+then
+	avconv -ss $START -i $INPUT -t $DURATION -vsync 1 -an $TDIR'/%4d.gif'
+else
+	avconv -ss $START -i $INPUT -t $DURATION -vsync 1 -an $TDIR'/%4d.gif' -loglevel 'quiet' > /dev/null
+fi
+
+if $VERBOSE
+then
+	echo "GIFFY: Conversion completed, processing frames..."
+fi
+
+if $RESIZEFLAG
+then
+	for i in $TDIR/*.gif; do convert "$i" -resize $RESIZE "${i%.gif}.gif"; done
+else
+	for i in $TDIR/*.gif; do convert "$i" "${i%.gif}.gif"; done
+fi
+
+DELAY="$((100/$FPS))"
+MINDELAY=2
+if [ "$DELAY" -lt "$MINDELAY" ]
+then
+	DELAY=$MINDELAY
+fi
+
+if $VERBOSE
+then
+	if $COMPRESS
+	then
+		echo "GIFFY: Processing finished, delay set to $DELAY..."
+		gifsicle --delay=$DELAY --optimize=$OPTIMIZE --loop $TDIR/*.gif --colors 256 > $OUTPUT
+	else
+		echo "GIFFY: Processing finished, delay set to $DELAY..."
+		gifsicle --delay=$DELAY --optimize=$OPTIMIZE --loop $TDIR/*.gif > $OUTPUT
+	fi
+else
+	if $COMPRESS
+	then
+		gifsicle --delay=$DELAY --optimize=$OPTIMIZE --loop $TDIR/*.gif --no-warnings > $OUTPUT
+	else
+		gifsicle --delay=$DELAY --optimize=$OPTIMIZE --loop $TDIR/*.gif --no-warnings > $OUTPUT
+	fi
+fi
+
+
+if $CAPTIONFLAG
+then
+	if $VERBOSE
+	then
+		echo "GIFFY: Captioning..."
+	fi
+	if $CAPTIONPCTFLAG
+	then
+		IMAGEHEIGHT=$(convert $OUTPUT -print "%h" /dev/null)
+		CAPTIONHEIGHT=$(($CAPTIONHEIGHT * $IMAGEHEIGHT / 100))
+	fi
+	convert -gravity south -stroke '#000C' -strokewidth 5 -font Helvetica-Bold -pointsize "$CAPTIONHEIGHT" -annotate 0 "$CAPTION" -stroke  none -fill white -font Helvetica-Bold -pointsize "$CAPTIONHEIGHT" -annotate 0 "$CAPTION" "$OUTPUT" "$OUTPUT"
+fi
+
+rm -rf $TDIR
+
+if $VERBOSE
+then
+	echo "GIFFY: Done!"
+fi
+
+exit 0
+
