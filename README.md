@@ -7,8 +7,9 @@ command line utility for creating animated gifs from videos
 
 Requirements
 ------------
-The following packages: `avconv`, `gifsicle`, and `imagemagick`.
-Use `apt-get` or `yum` to install.
+The following packages: `avconv`, `gifsicle`, and `imagemagick`. Use `apt-get` or `yum` to install.
+
+I have only tested on Ubuntu 12.04 LTS.
 
 Installation
 ------------
