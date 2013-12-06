@@ -13,7 +13,7 @@ I have only tested on Ubuntu 12.04 LTS.
 
 Installation
 ------------
-`git clone https://github.com/jpwright/giffy.gif`
+`git clone https://github.com/jpwright/giffy.git`
 
 Command line options
 --------------------
