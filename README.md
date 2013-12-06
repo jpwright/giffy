@@ -17,19 +17,19 @@ Installation
 Command line options
 --------------------
 
-OPTIONS:
-   -h, --help             Show this message
-   -i, --input            Input file. Can be a wide variety of formats, try 'avconv -formats' to see a list.
-   -o, --output           Output file. 
-   -s, --start            Start timestamp. Can be a number of seconds or in hh:mmss[.xxx] form.
-   -d, --duration         Duration. Should be a number of seconds (decimals OK)
-   -r, --resize           Resize operator. Can be a percentage (50%) or a width in pixels (50). Default is 100%.
-   -t, --caption          Caption operator. Should be a string, for example '-caption 'caption words here''. You can insert linebreaks into the caption by inserting '\n'.
-   -l, --caption-height   Line height of caption, either as a percentage or in number of pixels.
-   -f, --fps              Frames per second for the output gif. Default is 24. Max is 48.
-   -z, --optimize         Optimization level. Default (and maximum) is 3.
-   -c, --compress         Enable compression to 256 colors. Will reduce output filesize at the expense of quality.
-   -v, --verbose          Verbose output.
+    OPTIONS:
+       -h, --help             Show this message
+       -i, --input            Input file. Can be a wide variety of formats, try 'avconv -formats' to see a list.
+       -o, --output           Output file. 
+       -s, --start            Start timestamp. Can be a number of seconds or in hh:mmss[.xxx] form.
+       -d, --duration         Duration. Should be a number of seconds (decimals OK)
+       -r, --resize           Resize operator. Can be a percentage (50%) or a width in pixels (50). Default is 100%.
+       -t, --caption          Caption operator. Should be a string, for example '-caption 'caption words here''. You can insert linebreaks into the caption by inserting '\n'.
+       -l, --caption-height   Line height of caption, either as a percentage or in number of pixels.
+       -f, --fps              Frames per second for the output gif. Default is 24. Max is 48.
+       -z, --optimize         Optimization level. Default (and maximum) is 3.
+       -c, --compress         Enable compression to 256 colors. Will reduce output filesize at the expense of quality.
+       -v, --verbose          Verbose output.
    
 Examples
 --------
