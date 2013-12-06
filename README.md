@@ -1,7 +1,7 @@
 giffy
 =====
 
-command line utility for creating animated gifs from videos
+command line tool for creating animated gifs from videos
 
 ![futurama](https://raw.github.com/jpwright/giffy/master/farnsworth.gif)
 
