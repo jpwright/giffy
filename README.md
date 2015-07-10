@@ -3,7 +3,7 @@ giffy
 
 command line tool for creating animated gifs from videos
 
-![futurama](https://raw.github.com/jpwright/giffy/master/farnsworth.gif)
+![futurama](https://github.com/jpwright/giffy/blob/master/farnsworth.gif?raw=true)
 
 Requirements
 ------------
